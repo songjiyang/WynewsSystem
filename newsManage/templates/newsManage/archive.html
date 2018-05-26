@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+	
+    <title>Newspaper</title>
+	
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"  type="text/css">
+    <link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+	
+	<!-- Owl Carousel Assets -->
+    <link href="/static/owl-carousel/owl.carousel.css" rel="stylesheet">
+    <link href="/static/owl-carousel/owl.theme.css" rel="stylesheet">
+	
+	<!-- Custom Fonts -->
+    <link rel="stylesheet" href="/static/font-awesome-4.4.0/css/font-awesome.min.css"  type="text/css">
+	
+	<!-- jQuery and Modernizr-->
+	<script src="/static/js/jquery-2.1.1.js"></script>
+
+	<!-- Core JavaScript Files -->
+    <script src="/static/js/bootstrap.min.js"></script>
+      <script src="/static/js/bootstrap-datetimepicker.js"></script>
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="/static/js/html5shiv.js"></script>
+        <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<header>
+	<!--Top-->
+	<nav id="top">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<strong>Welcome to Us!</strong>
+				</div>
+				<div class="col-md-6">
+					<ul class="list-inline top-link link">
+						<li><a href="/newsManage/archive"><i class="fa fa-home"></i> Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!--Navigation-->
+    <nav id="menu" class="navbar container">
+		<div class="navbar-header">
+			<button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+			<a class="navbar-brand" href="#">
+				<div class="logo"><span>Newspaper</span></div>
+			</a>
+		</div>
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="/newsManage/archive">要闻</a></li>
+                <li><a href="/newsManage/archive?type=1">NBA</a></li>
+                <li><a href="/newsManage/archive?type=2">国际足球</a></li>
+                <li><a href="/newsManage/archive?type=3">中国足球</a></li>
+                <li><a href="/newsManage/archive?type=4">CBA</a></li>
+                <li><a href="/newsManage/archive?type=4">综合</a></li>
+
+			</ul>
+		</div>
+	</nav>
+</header>
+	<div class="featured container">
+	</div>
+	<!-- Header -->
+
+	<!-- /////////////////////////////////////////Content -->
+	<div id="page-content" class="archive-page container">
+		<div class="">
+			<div class="row">
+				<div id="main-content" class="col-md-8">
+                {% if newsinfo_list %}
+                {% for news in newsinfo_list %}
+					<div class="box">
+{#						<a href="/newsManage/single?pk={{ news.priKey }}" target="_blank"><h2 class="vid-name">[{{ news.newsType }}]{{ news.newsTile }}</h2></a>#}
+
+						<div class="wrap-vid">
+                            {% if news.viewPicturePath %}
+							<div class="zoom-container">
+								<div class="zoom-caption">
+								</div>
+								<img src="{{news.viewPicturePath  }}" />
+							</div>
+                            {% endif %}
+                        <a href="/newsManage/single?pk={{ news.priKey }}" target="_blank"><h2 class="vid-name">{{ news.newsTile }}</h2></a>
+                        <div class="info">
+							<span><i class="fa fa-calendar"></i>{{ news.newsDateTime }}</span>
+							<span><i class="fa fa-comment"></i> 0 Comments</span>
+							<span><i class="fa fa-heart"></i>1,200</span>
+						</div>
+						<!--	<p><a target="_blank" href="/newsManage/single?pk={{ news.priKey }}">MORE...</a></p>  -->
+						</div>
+					</div>
+					<hr class="line">
+                {% endfor %}
+                {% else %}
+                {% endif %}
+					<hr class="line">
+                    {% load pagetag %}
+					<div class="box">
+						<center>
+						<ul class="pagination">
+                        {% if pageObj.has_previous %}
+                            {% if date %}
+                                {% if type %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.previous_page_number }}&date={{ date }}&type={{ type }}">&laquo;</a></li>
+                                {% else %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.previous_page_number }}&date={{ date }}">&laquo;</a></li>
+                                {% endif %}
+                            {% else %}
+                              {% if type %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.previous_page_number }}&type={{ type }}">&laquo;</a></li>
+                                {% else %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.previous_page_number }}">&laquo;</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                             <li><a href="#">&laquo;</a></li>
+                        {% endif %}
+                        {% for num in paginator.page_range %}
+                            {% if date %}
+                                {% if type %}
+                                    {% circle_page currentPage num date type%}
+                                {% else %}
+                                    {% circle_page currentPage num date ''%}
+                                {% endif %}
+                            {% else %}
+                                   {% if type %}
+                                    {% circle_page currentPage num '' type%}
+                                {% else %}
+                                    {% circle_page currentPage num '' ''%}
+                                {% endif %}
+                            {% endif %}
+{#                            {% if num == currentPage %}#}
+{#                                <li class="active"><a href="/newsManage/archive?page={{ num }}">{{ num }}</a></li>#}
+{#                            {% else %}#}
+{#                                <li class=""><a href="/newsManage/archive?page={{ num }}">{{ num }}</a></li>#}
+{#                            {% endif %}#}
+                        {% endfor %}
+                        {% if pageObj.has_next %}
+                            {% if date %}
+                                {% if type %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.next_page_number }}&date={{ date }}&type={{ type }}">&raquo;</a></li>
+                                {% else %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.next_page_number }}&date={{ date }}">&raquo;</a></li>
+                                {% endif %}
+                            {% else %}
+                                   {% if type %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.next_page_number }}&type={{ type }}">&raquo;</a></li>
+                                {% else %}
+                                    <li><a href="/newsManage/archive?page={{ pageObj.next_page_number }}">&raquo;</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                             <li><a href="#">&raquo;</a></li>
+                        {% endif %}
+                    </ul>
+					</center>
+					</div>
+				</div>
+				<div id="sidebar" class="col-md-4">
+					<!---- Start Widget ---->
+					<div class="widget wid-follow">
+						<div class="heading"><h4>日期搜索</h4></div>
+						<div class="content">
+							<input type="text" class="datetimepicker" id="datetimepicker" name="name" id="name" required>
+							<button class="btn btn-primary" style="!important;padding-bottom: 4px;margin-bottom: 2px" id="searchArt">搜索</button>
+						</div>
+					</div>
+					<!---- Start Widget ---->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+		<div class="copy-right">
+			<p>xx毕业设计</p>
+		</div>
+	</footer>
+	<!-- Footer -->
+
+	<!-- JS -->
+	<script src="/static/owl-carousel/owl.carousel.js"></script>
+    <script>
+    $(document).ready(function() {
+      $("#owl-demo").owlCarousel({
+        autoPlay: 3000,
+        items : 5,
+        itemsDesktop : [1199,4],
+        itemsDesktopSmall : [979,4]
+      });
+
+    });
+       $('#datetimepicker').datetimepicker({
+            format: 'mm/dd/yyyy',
+            todayHighlight: 1,//今天高亮
+            minView: "month",//设置只显示到月份
+            startView:2,
+            forceParse: 0,
+            autoclose: 1//选择后自动关闭
+        });
+       $('#searchArt').click(function () {
+           type = getQueryString('type')
+           subString = ''
+           if(type){
+               subString='?type='+type+"&date="+$("#datetimepicker").val()
+           }else{
+               subString="?date="+$("#datetimepicker").val()
+           }
+           location.href='/newsManage/archive'+subString
+       })
+        function getQueryString(name) {
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", 'i'); // 匹配目标参数
+          var result = window.location.search.substr(1).match(reg); // 对querystring匹配目标参数
+          if (result != null) {
+            return decodeURIComponent(result[2]);
+          } else {
+            return null;
+          }
+        }
+    </script>
+	
+</body>
+</html>
